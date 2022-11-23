@@ -9,13 +9,16 @@
   <body>
     <h1>Login</h1>
 
+    <a href="/test">test</a>
+
     <form id="login_form">
       <label for="username">Enter Username:</label><br />
       <input type="text" id="username" name="username" /><br />
       <label for="password">Enter password:</label><br />
       <input type="password" id="password" name="password" />
 
-      <button type="submit">Login</button>
+      <button type="submit">
+        Login
     </form>
 
     <script>
@@ -40,10 +43,16 @@
     }
         });
 
-        // console.log(response);
         response.json().then((data) => {
           console.log(data);
+          if(data.status === 'false'){
+            //
+            alert('Wrong username or password')
+          }else{
+          window.location.href = `http://localhost:8080/api/home_redirect/${data.user.username}`;
+          }
         });
+        
       });
     </script>
 

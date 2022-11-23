@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require('express')
 const app = express();
 const path = require('path')
+const cookieParser = require('cookie-parser')
 
 // database path
 
@@ -14,14 +15,17 @@ const PlaylistRoute = require('./routes/playlist')
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 
 
 app.use(express.static("./views"));
 
-app.set('views' ,path.join(__dirname , './views'))
-app.set('view engine' , 'ejs')
+app.use('/static', express.static(path.join(__dirname, 'public')))
 
+app.set('view engine' , 'ejs')
+// app.set('views' ,path.join(__dirname , './views'))
+// app.use('/views' , express.static(path.join(__dirname+'/views'))
 
 
 // API's
@@ -29,8 +33,11 @@ app.set('view engine' , 'ejs')
 app.use('/api' , AuthRoute);
 app.use('/api' , PlaylistRoute);
 
+app.post('/test', (req,res)=>{
+    console.log("here");
+    res.render('homepage')
+} )
 
-// redirect pages 
 
 app.use('/register' , (req,res)=>{
     res.render('register')
@@ -41,13 +48,20 @@ app.use('/login' , (req,res)=>{
 });
 
 app.get("/" , (req,res)=>{
-    res.render('home')
+    res.render('homepage')
 })
 
-// app.get("/playlist" , (req,res)=>{
-//     res.render('home')
-// })
-
+app.get("/search_result" , (req,res)=>{
+    let data = req.cookies.movies;
+    console.log(data);
+    if(data === undefined)
+        return res.json({
+            "data" : "Movie Not Found "
+        })
+    res.render('playlist' , {
+        "data" : JSON.parse(data)
+    })
+})
 
 
 

@@ -1,0 +1,7 @@
+    <% if (document.cookie ) { %>
+        <p>Hello world!</p>
+    <% } else if (x === 2) { %>
+        <p>Hi earth!</p>
+    <% } else { %>
+        <p>Hey terra!</p>
+    <% } %> 

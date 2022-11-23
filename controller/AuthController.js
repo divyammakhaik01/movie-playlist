@@ -1,5 +1,7 @@
 const User = require("../model/user");
 
+
+
 const login = async (req, res) => {
   //login api logic here
   try {
@@ -24,6 +26,7 @@ const login = async (req, res) => {
     const match = await user.checkPassword(password);
 
     if (!match) {
+      // res.redirect('login')
       return res.statusCode(400).json({
         message: "The password does not match",
         statusCode: 400,
@@ -31,9 +34,15 @@ const login = async (req, res) => {
     }
     
     const token = user.getJwtToken();
-    //
-    req.user = user;
-    res.status(200).json({ success: true, token, user });
+    
+    
+    res.cookie('jwtoken' , token , {
+      maxAge: 1000 * 60 * 15, // would expire after 15 minutes
+      httpOnly : false
+    })
+
+    res.status(200).json({ status: true, token, user });
+
   } catch (error) {
     return res.json({
       status: "false",
@@ -41,6 +50,9 @@ const login = async (req, res) => {
     });
   }
 };
+
+
+
 
 const register = async (req, res) => {
   try {
@@ -78,9 +90,26 @@ const register = async (req, res) => {
   }
 };
 
+const logout = async (req, res) => {
+  //logout api logic here
+    try {
+
+
+    
+
+  } catch (error) {
+    return res.json({
+      status: "false",
+      message: error,
+    });
+  }
+};
+
+
 const AuthController = {
   login,
   register,
+  logout
 };
 
 module.exports = AuthController;

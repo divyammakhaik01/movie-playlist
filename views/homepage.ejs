@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <a href="http://localhost:8080/login">Login</a>
+    <a href="http://localhost:8080/register">Register</a>
+
+    <div class="container">
+      <div class="input-group mb-3">
+        <input
+          type="text"
+          id="movie_search_id"
+          class="form-control"
+          placeholder="Search movie.."
+          aria-label="Recipient's username"
+          aria-describedby="button-addon2"
+        />
+        <button class="btn btn-outline-secondary" type="button" id="submit">
+          Search
+        </button>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      let movie_search_id = document.getElementById("movie_search_id");
+      let submit = document.getElementById("submit");
+
+      const call = async (data) => {
+        // const response_data = await fetch("/playlist", {
+        //   method: "POST",
+
+        //   body: JSON.stringify({
+        //     data: data,
+        //   }),
+        //   headers: {
+        //     "Content-type": "application/json; charset=UTF-8",
+        //   },
+        // });
+
+        // response_data.json().then((data) => {
+        //   console.log(data);
+        //   if (data.status === "false") {
+        //     //
+        //     alert("Something went wrong !!");
+        //   } else {
+            console.log(data);
+            const expires = new Date(Date.now() + 10000000).toUTCString()
+            // document.cookie = `movies=${data.Search}; expires=${expires}`
+            let dataFound = JSON.stringify(data.Search);
+            console.log(data.Search);
+            document.cookie = `movies=${dataFound}`;
+            window.location.href = `http://localhost:8080/search_result`;
+          }
+        // });
+    //   };
+
+      submit.addEventListener("click", async function (e) {
+        e.preventDefault();
+        const response = await fetch(
+          `https://www.omdbapi.com/?s=${movie_search_id.value}&apikey=f8662fa2`,
+          {
+            method: "GET",
+          }
+        );
+
+        // console.log(response);
+        response.json().then((data) => {
+        //   console.log(data);
+          if (data.response === "false") {
+            //
+            alert("Something went wrong !!");
+          } else {
+            console.log(data.Search);
+            call(data);
+
+            // window.location.href = `http://localhost:8080/api/home_redirect/${data.user.username}`;
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
